@@ -1,0 +1,31 @@
+Full-Stack Software Engineer — Series A Startup (Remote)
+
+About Us
+We're a 25-person product-led growth startup building the next-generation project management platform. Our stack is TypeScript end-to-end — React on the frontend, Node.js on the backend, and PostgreSQL as our primary database.
+
+What You'll Do
+- Build and ship product features across the full stack: React (with Next.js), Node.js APIs, and PostgreSQL
+- Design REST APIs consumed by web and mobile clients
+- Integrate real-time collaboration features using WebSockets
+- Write and maintain GraphQL schemas for our internal data graph
+- Own CI/CD pipelines using GitHub Actions
+- Work closely with design to ship polished, accessible UI components
+- Contribute to our observability stack — structured logging, distributed tracing with AWS X-Ray
+- Manage Redis caching layers for hot data paths
+- Conduct code review and mentor junior engineers
+
+What We're Looking For
+- 2+ years of full-stack experience
+- Strong TypeScript and JavaScript skills — you think in types
+- React expertise, preferably with Next.js
+- Node.js backend development (REST APIs, middleware, event loop profiling)
+- PostgreSQL — query optimization, schema design, migrations
+- Redis for session management and caching
+- Comfortable with Docker for local dev and deployment
+- AWS experience (EC2, S3, RDS, Lambda)
+- Git workflow — PRs, branching strategies, code review culture
+- JWT-based authentication implementation experience
+
+Nice to Have
+- MongoDB experience for document-storage use cases
+- Interest in AI-assisted product features

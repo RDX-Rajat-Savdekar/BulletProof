@@ -1,0 +1,16 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+*.pdf
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+/tmp_latex/
+node_modules/
+.DS_Store
+resume_history.json
+project_ideas.json

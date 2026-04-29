@@ -1,0 +1,323 @@
+{
+  "personal": {
+    "name": "Rajat Savdekar",
+    "location": "Los Angeles, CA",
+    "phone": "+1 (213) 574-8894",
+    "email": "rajatsavdekar@gmail.com",
+    "linkedin": "linkedin.com/in/rajatsavdekar",
+    "github": "github.com/RDX-Rajat-Savdekar",
+    "note": "Eligible for up to 3 years of STEM OPT starting May 2026; no immediate sponsorship required"
+  },
+  "education": [
+    {
+      "id": "usc",
+      "school": "University of Southern California",
+      "degree": "Master of Science in Computer Science",
+      "gpa": "3.6",
+      "period": "Aug 2024 \u2013 May 2026",
+      "location": "Los Angeles, CA"
+    },
+    {
+      "id": "mumbai",
+      "school": "University of Mumbai",
+      "degree": "Bachelor of Engineering in Computer Engineering",
+      "gpa": "3.7",
+      "period": "Aug 2019 \u2013 May 2023",
+      "location": "Mumbai, India"
+    }
+  ],
+  "work_experience": [
+    {
+      "id": "ta",
+      "title": "Teaching Assistant",
+      "company": "USC Summer Programs, Discover Engineering",
+      "period": "May 2025 \u2013 July 2025",
+      "location": "Los Angeles, CA",
+      "bullets": [
+        {
+          "id": "ta_b1",
+          "text": "Guided 2 international teams of 15+ students through Python, Git, and RESTful API development on Raspberry Pi robotics hardware across a 4-week multidisciplinary rotation, with all teams successfully delivering functional prototypes on schedule.",
+          "latex": "Guided 2 international teams of 15+ students through \\textbf{Python}, \\textbf{Git}, and \\textbf{RESTful API} development on Raspberry Pi robotics hardware across a 4-week multidisciplinary rotation, with all teams successfully delivering functional prototypes on schedule.",
+          "keywords": [
+            "python",
+            "git",
+            "rest api"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "jalgaon",
+      "title": "Software Engineer",
+      "company": "Jalgaon Fruits Sales Cooperative",
+      "period": "May 2023 \u2013 May 2024",
+      "location": "Jalgaon, India",
+      "bullets": [
+        {
+          "id": "jalgaon_b1",
+          "text": "Built a JavaScript, HTML, and CSS web-based procurement platform backed by a RESTful API, migrating 150 daily users from manual logs to a digital system with 99.9% uptime across complex inventory transactions.",
+          "latex": "Built a \\textbf{JavaScript}, \\textbf{HTML}, and \\textbf{CSS} web-based procurement platform backed by a RESTful API, migrating 150 daily users from manual logs to a digital system with 99.9\\% uptime across complex inventory transactions.",
+          "keywords": [
+            "javascript",
+            "html",
+            "css",
+            "rest api"
+          ]
+        },
+        {
+          "id": "jalgaon_b2",
+          "text": "Decomposed a legacy monolith into Python microservices and redesigned the MySQL schema, cutting average query time by 40% on high-frequency supply chain lookups.",
+          "latex": "Decomposed a legacy monolith into \\textbf{Python} microservices and redesigned the \\textbf{MySQL} schema, cutting average query time by 40\\% on high-frequency supply chain lookups.",
+          "keywords": [
+            "python",
+            "microservices",
+            "mysql"
+          ]
+        },
+        {
+          "id": "jalgaon_b3",
+          "text": "Introduced Docker-based CI/CD pipelines with Git-managed releases, reducing deployment cycle time by 30% and eliminating manual steps that previously caused production rollbacks.",
+          "latex": "Introduced \\textbf{Docker}-based \\textbf{CI/CD} pipelines with \\textbf{Git}-managed releases, reducing deployment cycle time by 30\\% and eliminating manual steps that previously caused production rollbacks.",
+          "keywords": [
+            "docker",
+            "ci/cd",
+            "git"
+          ]
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "mockpad",
+      "name": "MockPad",
+      "links": {
+        "live": "https://mockpad-kappa.vercel.app/",
+        "github": "https://github.com/RDX-Rajat-Savdekar/mockpad"
+      },
+      "bullets": [
+        {
+          "id": "mockpad_b1",
+          "text": "Designed and built a real-time collaborative code editor in React and Node.js, implementing Yjs CRDTs over WebSockets to support conflict-free concurrent edits across 50+ simultaneous clients with sub-100ms sync latency.",
+          "latex": "Designed and built a real-time collaborative code editor in \\textbf{React} and \\textbf{Node.js}, implementing Yjs CRDTs over \\textbf{WebSockets} to support conflict-free concurrent edits across 50+ simultaneous clients with sub-100ms sync latency.",
+          "keywords": [
+            "react",
+            "node.js",
+            "websockets",
+            "crdt",
+            "real-time",
+            "~distributed systems",
+            "~concurrency",
+            "yjs"
+          ]
+        },
+        {
+          "id": "mockpad_b2",
+          "text": "Integrated OpenAI Whisper via a Python microservice for asynchronous speech transcription, synchronizing a three-timeline event log (code ops, audio, captions) anchored to a shared session timestamp, enabling interviewers to replay complete sessions with synchronized audio and transcript.",
+          "latex": "Integrated OpenAI Whisper via a \\textbf{Python} microservice for asynchronous speech transcription, synchronizing a three-timeline event log (code ops, audio, captions) anchored to a shared session timestamp, enabling interviewers to replay complete sessions with synchronized audio and transcript.",
+          "keywords": [
+            "whisper",
+            "python",
+            "microservices",
+            "speech-to-text",
+            "~ai"
+          ]
+        },
+        {
+          "id": "mockpad_b3",
+          "text": "Deployed full-stack to Vercel and a custom Linux Caddy server on DigitalOcean, with a MongoDB event-sourced op log powering continuous session playback and audit history.",
+          "latex": "Deployed full-stack to Vercel and a custom \\textbf{Linux} Caddy server on DigitalOcean, with a \\textbf{MongoDB} event-sourced op log powering continuous session playback and audit history.",
+          "keywords": [
+            "vercel",
+            "linux",
+            "digitalocean",
+            "mongodb",
+            "event sourcing"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "devstack",
+      "name": "DevStack \u2013 Open Source Developer Infrastructure Platform",
+      "links": {
+        "github": "https://github.com/RDX-Rajat-Savdekar/devstack"
+      },
+      "bullets": [
+        {
+          "id": "devstack_b1",
+          "text": "Built a self-hostable developer infrastructure platform \u2013 feature flags, workflow orchestration, observability, auth, event analytics, and error tracking \u2013 using Next.js, Node.js, PostgreSQL, and Docker, enabling any team to self-host the full platform via a single CI/CD-integrated Docker Compose command.",
+          "latex": "Built a self-hostable developer infrastructure platform -- feature flags, workflow orchestration, observability, auth, event analytics, and error tracking -- using \\textbf{Next.js}, \\textbf{Node.js}, \\textbf{PostgreSQL}, and \\textbf{Docker}, enabling any team to self-host the full platform via a single \\textbf{CI/CD}-integrated Docker Compose command.",
+          "keywords": [
+            "next.js",
+            "node.js",
+            "postgresql",
+            "docker",
+            "ci/cd",
+            "~microservices"
+          ]
+        },
+        {
+          "id": "devstack_b2",
+          "text": "Engineered a durable workflow execution engine using an event-sourced PostgreSQL schema and a TypeScript deterministic replay engine, re-executing workflow functions from activity history on server restart to resume at the exact point of failure without re-triggering completed side effects.",
+          "latex": "Engineered a durable workflow execution engine using an event-sourced PostgreSQL schema and a \\textbf{TypeScript} deterministic replay engine, re-executing workflow functions from activity history on server restart to resume at the exact point of failure without re-triggering completed side effects.",
+          "keywords": [
+            "event sourcing",
+            "postgresql",
+            "typescript"
+          ]
+        },
+        {
+          "id": "devstack_b3",
+          "text": "Designed a feature flag targeting rules engine with sub-5ms evaluation via a Redis cache and real-time WebSocket push propagation, exposing all platform services through a GraphQL federation gateway behind a single typed schema.",
+          "latex": "Designed a feature flag targeting rules engine with sub-5ms evaluation via a \\textbf{Redis} cache and real-time \\textbf{WebSocket} push propagation, exposing all platform services through a \\textbf{GraphQL} federation gateway behind a single typed schema.",
+          "keywords": [
+            "redis",
+            "websockets",
+            "graphql",
+            "real-time",
+            "~caching",
+            "~pub/sub"
+          ]
+        },
+        {
+          "id": "devstack_b4",
+          "text": "Secured the platform with a shared JWT auth layer using RS256 signing and refresh token rotation, implementing role-based access control across all six services via a centralized REST API identity service backed by a normalized SQL schema, allowing teams to manage all platform permissions under a single identity.",
+          "latex": "Secured the platform with a shared \\textbf{JWT} auth layer using RS256 signing and refresh token rotation, implementing role-based access control across all six services via a centralized \\textbf{REST API} identity service backed by a normalized \\textbf{SQL} schema, allowing teams to manage all platform permissions under a single identity.",
+          "keywords": [
+            "jwt",
+            "~rbac",
+            "rest api",
+            "sql",
+            "~oauth"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "celestia",
+      "name": "Celestia \u2013 Meta Quest",
+      "links": {
+        "demo": "https://youtu.be/D05QMqR-XI0?si=2WFZmz_8aKNR6co7&t=10",
+        "github": "https://github.com/RDX-Rajat-Savdekar/VR-Celestia"
+      },
+      "bullets": [
+        {
+          "id": "celestia_b1",
+          "text": "Built a Python RAG pipeline and RESTful API backed by AWS and MongoDB, indexing 10,000+ celestial bodies to ground an LLM with real-time orbital facts and eliminate hallucination on astronomical queries.",
+          "latex": "Built a \\textbf{Python} RAG pipeline and \\textbf{RESTful API} backed by \\textbf{AWS} and \\textbf{MongoDB}, indexing 10,000+ celestial bodies to ground an LLM with real-time orbital facts and eliminate hallucination on astronomical queries.",
+          "keywords": [
+            "python",
+            "rag",
+            "rest api",
+            "aws",
+            "mongodb",
+            "~llm",
+            "real-time"
+          ]
+        },
+        {
+          "id": "celestia_b2",
+          "text": "Delivered on-device AI via Whisper and C# scripting on the Meta Quest 3 client, achieving local speech-to-text inference under 500ms to remove network dependency during natural language interactions.",
+          "latex": "Delivered on-device \\textbf{AI} via Whisper and \\textbf{C\\#} scripting on the Meta Quest 3 client, achieving local speech-to-text inference under 500ms to remove network dependency during natural language interactions.",
+          "keywords": [
+            "~ai",
+            "whisper",
+            "c#",
+            "speech-to-text"
+          ]
+        },
+        {
+          "id": "celestia_b3",
+          "text": "Maintained 90 FPS for 6DoF planetary models by optimizing CI/CD-deployed Unity rendering pipelines, meeting the headset's minimum frame rate requirement for comfortable 6DoF movement without motion sickness.",
+          "latex": "Maintained 90 FPS for 6DoF planetary models by optimizing \\textbf{CI/CD}-deployed Unity rendering pipelines, meeting the headset's minimum frame rate requirement for comfortable 6DoF movement without motion sickness.",
+          "keywords": [
+            "ci/cd",
+            "unity"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "splitit",
+      "name": "SplitIt",
+      "links": {
+        "live": "https://splitit-frontend-vite.vercel.app/",
+        "github": "https://github.com/RDX-Rajat-Savdekar/SplitIt"
+      },
+      "bullets": [
+        {
+          "id": "splitit_b1",
+          "text": "Implemented a graph-based debt simplification algorithm to consolidate N-party settlements into the minimum transaction set, reducing average settlement steps by 60% versus a naive per-pair approach.",
+          "latex": "Implemented a graph-based debt simplification algorithm to consolidate N-party settlements into the minimum transaction set, reducing average settlement steps by 60\\% versus a naive per-pair approach.",
+          "keywords": []
+        },
+        {
+          "id": "splitit_b2",
+          "text": "Designed a modular RESTful API with object-oriented Node.js and optimized NoSQL (MongoDB) schemas to handle concurrent multi-user financial state without race conditions.",
+          "latex": "Designed a modular \\textbf{RESTful API} with object-oriented \\textbf{Node.js} and optimized \\textbf{NoSQL} (MongoDB) schemas to handle concurrent multi-user financial state without race conditions.",
+          "keywords": [
+            "rest api",
+            "node.js",
+            "mongodb",
+            "nosql",
+            "~concurrency"
+          ]
+        },
+        {
+          "id": "splitit_b3",
+          "text": "Deployed full-stack to a Linux Caddy server on DigitalOcean, sustaining sub-200ms transaction resolution under concurrent load with no additional infrastructure cost as user count scaled.",
+          "latex": "Deployed full-stack to a \\textbf{Linux} Caddy server on DigitalOcean, sustaining sub-200ms transaction resolution under concurrent load with no additional infrastructure cost as user count scaled.",
+          "keywords": [
+            "linux",
+            "digitalocean"
+          ]
+        }
+      ]
+    }
+  ],
+  "skills": {
+    "languages": [
+      "typescript",
+      "javascript",
+      "python",
+      "java",
+      "c++",
+      "c#",
+      "html",
+      "css",
+      "sql"
+    ],
+    "frameworks": [
+      "react",
+      "next.js",
+      "node.js",
+      "graphql",
+      "rest api",
+      "websockets",
+      "yjs"
+    ],
+    "databases": [
+      "mongodb",
+      "postgresql",
+      "mysql",
+      "redis"
+    ],
+    "infrastructure": [
+      "aws",
+      "docker",
+      "ci/cd",
+      "linux",
+      "git",
+      "vercel",
+      "digitalocean"
+    ],
+    "other": [
+      "unity",
+      "swift",
+      "swiftui",
+      "coreml",
+      "visionos"
+    ]
+  }
+}

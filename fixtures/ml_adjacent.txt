@@ -1,0 +1,31 @@
+Software Engineer, ML Platform — Cohere (Remote)
+
+About the Role
+We're building the infrastructure that enables our ML researchers to train, evaluate, and deploy large language models at scale. This is not an ML research role — it's a software engineering role for someone who loves building robust platform infrastructure that ML teams depend on.
+
+Responsibilities
+- Build and maintain Python-based data pipelines for training data ingestion and preprocessing
+- Design and implement model serving infrastructure using REST APIs and gRPC
+- Build tooling for model evaluation, versioning, and experiment tracking
+- Work with distributed systems for large-scale batch inference (RAG pipelines, embedding services)
+- Integrate with cloud infrastructure (AWS SageMaker, S3, EC2) for compute orchestration
+- Implement observability for ML workflows: latency tracking, throughput monitoring, error rates
+- Collaborate with ML researchers to productionize experimental code
+- Maintain PostgreSQL-backed metadata stores for model registry
+
+Requirements
+- 3+ years of software engineering experience
+- Strong Python skills — you can write production-grade Python, not just notebooks
+- Experience building and deploying REST APIs
+- Familiarity with LLMs and RAG architectures — you don't need to train them, but you need to know how they work
+- Experience with distributed systems or data pipelines at scale
+- Cloud infrastructure experience (AWS preferred)
+- Docker and containerization for ML workloads
+- SQL for metadata management and analytics queries
+- Git, CI/CD for ML model lifecycle management
+
+Bonus
+- Experience with vector databases or semantic search (Pinecone, Weaviate, pgvector)
+- Familiarity with Whisper or other speech/audio models
+- gRPC or Protobuf experience
+- Redis for caching inference results

@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume Tool — Rajat</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1117; --surface: #1a1d27; --surface2: #22263a; --border: #2e3250;
+      --accent: #6c8aff; --accent2: #a78bfa; --green: #34d399; --yellow: #fbbf24;
+      --red: #f87171; --blue: #60a5fa; --text: #e2e8f0; --muted: #8892b0;
+      --radius: 8px; --font: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; line-height: 1.5; min-height: 100vh; }
+
+    nav { background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 20px; height: 52px; gap: 4px; }
+    nav .logo { font-weight: 700; font-size: 15px; color: var(--accent); margin-right: 20px; letter-spacing: -0.3px; }
+    nav .logo span { color: var(--muted); font-weight: 400; }
+    .tab-btn { background: none; border: none; color: var(--muted); font-size: 13px; font-family: var(--font); padding: 6px 14px; border-radius: var(--radius); cursor: pointer; transition: all .15s; }
+    .tab-btn:hover { color: var(--text); background: var(--surface2); }
+    .tab-btn.active { color: var(--accent); background: rgba(108,138,255,.12); font-weight: 600; }
+
+    .page { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; }
+    .page.active { display: block; }
+
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 14px; }
+    .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+
+    .btn { display: inline-flex; align-items: center; gap: 5px; border: none; border-radius: 6px; padding: 6px 12px; font-size: 12px; font-family: var(--font); cursor: pointer; transition: all .15s; font-weight: 500; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #7b98ff; }
+    .btn-ghost { background: none; color: var(--muted); border: 1px solid var(--border); }
+    .btn-ghost:hover { color: var(--text); background: var(--surface2); }
+    .btn-danger { background: none; color: var(--red); border: 1px solid rgba(248,113,113,.3); }
+    .btn-danger:hover { background: rgba(248,113,113,.1); }
+    .btn-green { background: rgba(52,211,153,.15); color: var(--green); border: 1px solid rgba(52,211,153,.3); }
+    .btn-green:hover { background: rgba(52,211,153,.25); }
+    .btn-purple { background: rgba(167,139,250,.15); color: var(--accent2); border: 1px solid rgba(167,139,250,.3); }
+    .btn-purple:hover { background: rgba(167,139,250,.25); }
+    .btn-sm { padding: 3px 8px; font-size: 11px; }
+    .btn:disabled { opacity: .4; cursor: not-allowed; }
+
+    .bullet-item { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; }
+    .bullet-item:hover { border-color: var(--accent); }
+    .bullet-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+    .bullet-textarea { width: 100%; background: var(--bg); border: 1px solid var(--accent); border-radius: 4px; color: var(--text); font-family: var(--font); font-size: 13px; line-height: 1.5; padding: 6px 8px; resize: vertical; min-height: 72px; }
+    .latex-textarea { width: 100%; background: var(--bg); border: 1px solid rgba(167,139,250,.4); border-radius: 4px; color: #c4b5fd; font-family: 'Courier New', monospace; font-size: 11px; line-height: 1.4; padding: 6px 8px; resize: vertical; min-height: 60px; margin-top: 6px; }
+    .latex-label { font-size: 10px; color: var(--accent2); text-transform: uppercase; letter-spacing: .4px; margin-top: 8px; margin-bottom: 3px; }
+    .bullet-meta { display: flex; align-items: center; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+    .kw-tag { font-size: 11px; padding: 2px 7px; border-radius: 12px; font-weight: 500; }
+    .kw-bullet { background: rgba(52,211,153,.12); color: var(--green); border: 1px solid rgba(52,211,153,.25); }
+    .kw-implicit { background: rgba(251,191,36,.1); color: var(--yellow); border: 1px solid rgba(251,191,36,.2); }
+    .kw-tag-input { flex: 1; min-width: 120px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--font); font-size: 12px; padding: 3px 7px; }
+    .kw-tag-input:focus { border-color: var(--accent); outline: none; }
+    .bullet-actions { display: flex; gap: 6px; align-items: center; margin-top: 8px; }
+
+    .section-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    h2.section-title { font-size: 13px; font-weight: 700; color: var(--accent2); text-transform: uppercase; letter-spacing: .5px; }
+    .role-header { margin-bottom: 8px; display: flex; justify-content: space-between; align-items: flex-start; }
+    .role-title { font-weight: 600; font-size: 14px; }
+    .role-meta { font-size: 12px; color: var(--muted); }
+
+    /* Form fields */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+    .form-group { margin-bottom: 10px; }
+    .form-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 4px; display: block; }
+    .form-input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: var(--font); font-size: 13px; padding: 7px 10px; }
+    .form-input:focus { border-color: var(--accent); outline: none; }
+    .form-textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: var(--font); font-size: 13px; padding: 7px 10px; resize: vertical; min-height: 80px; }
+    .form-textarea:focus { border-color: var(--accent); outline: none; }
+
+    /* Modal */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 100; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; width: 560px; max-width: 95vw; max-height: 85vh; overflow-y: auto; }
+    .modal h3 { font-size: 15px; font-weight: 700; margin-bottom: 16px; }
+    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+
+    /* Analyze */
+    .analyze-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 700px) { .analyze-layout { grid-template-columns: 1fr; } }
+    .jd-input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-family: var(--font); font-size: 13px; padding: 10px; resize: vertical; min-height: 220px; }
+    .jd-input:focus { border-color: var(--accent); outline: none; }
+    .grade-badge { font-size: 28px; font-weight: 700; text-align: center; padding: 14px; border-radius: var(--radius); margin-bottom: 12px; }
+    .grade-badge.Ap { background: rgba(52,211,153,.1); color: var(--green); border: 1px solid rgba(52,211,153,.3); }
+    .grade-badge.A  { background: rgba(52,211,153,.08); color: var(--green); border: 1px solid rgba(52,211,153,.2); }
+    .grade-badge.B  { background: rgba(96,165,250,.08); color: var(--blue); border: 1px solid rgba(96,165,250,.2); }
+    .grade-badge.C  { background: rgba(251,191,36,.08); color: var(--yellow); border: 1px solid rgba(251,191,36,.2); }
+    .grade-badge.D, .grade-badge.F { background: rgba(248,113,113,.08); color: var(--red); border: 1px solid rgba(248,113,113,.2); }
+    .meta-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+    .meta-row span:last-child { color: var(--text); font-weight: 500; }
+    .gap-bucket { margin-bottom: 10px; }
+    .gap-bucket-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .gap-bucket-title .count { font-size: 10px; background: var(--surface2); border-radius: 10px; padding: 1px 7px; color: var(--muted); }
+    .gap-row { background: var(--surface2); border-radius: 5px; padding: 6px 10px; margin-bottom: 4px; font-size: 12px; }
+    .gap-row .kw-name { font-weight: 600; }
+    .gap-row .surface-hint { color: var(--muted); font-size: 11px; margin-top: 2px; }
+    .gap-covered .kw-name { color: var(--green); }
+    .gap-surface .kw-name { color: var(--yellow); }
+    .gap-skills .kw-name { color: var(--blue); }
+    .gap-real .kw-name { color: var(--red); }
+
+    /* Suggested project card */
+    .suggested-card { background: var(--surface); border: 1px solid rgba(167,139,250,.4); border-radius: var(--radius); padding: 14px; margin-top: 12px; }
+    .suggested-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+    .suggested-label { font-size: 10px; text-transform: uppercase; letter-spacing: .5px; color: var(--accent2); font-weight: 700; margin-bottom: 4px; }
+    .suggested-name { font-size: 14px; font-weight: 700; color: var(--text); }
+    .suggested-tagline { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .suggested-meta { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+    .suggested-why { font-size: 12px; color: var(--muted); background: var(--surface2); border-radius: 5px; padding: 6px 10px; margin-bottom: 8px; }
+    .suggested-bullets { border-top: 1px solid var(--border); padding-top: 8px; }
+    .suggested-bullet { font-size: 12px; color: var(--text); padding: 4px 0; border-bottom: 1px solid var(--border); line-height: 1.5; }
+    .suggested-bullet:last-child { border-bottom: none; }
+    .suggested-actions { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
+    .include-toggle { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px; padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); user-select: none; }
+    .include-toggle.on { border-color: var(--green); background: rgba(52,211,153,.08); color: var(--green); }
+    .include-toggle input { accent-color: var(--green); }
+
+    /* Build */
+    .build-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+    @media (max-width: 800px) { .build-layout { grid-template-columns: 1fr; } }
+
+    .proj-rank-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+    @media (max-width: 600px) { .proj-rank-grid { grid-template-columns: 1fr; } }
+    .proj-rank-card { border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; cursor: pointer; transition: all .15s; background: var(--surface2); }
+    .proj-rank-card:hover { border-color: var(--accent); }
+    .proj-rank-card.recommended { border-color: var(--green); background: rgba(52,211,153,.04); }
+    .proj-rank-card.excluded { opacity: .5; }
+    .proj-rank-name { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+    .proj-rank-score { font-size: 11px; color: var(--muted); margin-top: 3px; }
+    .proj-rank-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 6px; overflow: hidden; }
+    .proj-rank-bar-fill { height: 100%; border-radius: 2px; background: var(--green); transition: width .3s; }
+    .rank-badge { font-size: 10px; padding: 1px 6px; border-radius: 10px; font-weight: 700; }
+    .rank-1 { background: rgba(251,191,36,.2); color: var(--yellow); }
+    .rank-2 { background: rgba(52,211,153,.15); color: var(--green); }
+    .rank-3 { background: rgba(96,165,250,.12); color: var(--blue); }
+    .rank-other { background: var(--surface); color: var(--muted); }
+
+    .bullet-toggle { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; display: flex; align-items: flex-start; gap: 10px; cursor: pointer; transition: border-color .15s; }
+    .bullet-toggle.selected { border-color: var(--green); background: rgba(52,211,153,.04); }
+    .bullet-toggle input[type=checkbox] { margin-top: 2px; accent-color: var(--green); flex-shrink: 0; }
+    .bullet-toggle-text { font-size: 12px; color: var(--text); line-height: 1.5; }
+    .bullet-gap-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+    .gap-tag { font-size: 10px; padding: 1px 6px; border-radius: 10px; font-weight: 500; }
+    .gap-tag.covers { background: rgba(52,211,153,.15); color: var(--green); }
+    .gap-tag.surfaces { background: rgba(251,191,36,.12); color: var(--yellow); }
+
+    .score-panel { position: sticky; top: 20px; }
+    .score-ring { text-align: center; padding: 16px 0; }
+    .score-pct { font-size: 42px; font-weight: 700; color: var(--accent); }
+    .score-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .export-btns { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+
+    .build-proj-section { margin-bottom: 16px; }
+    .build-proj-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding: 8px 12px; background: var(--surface2); border-radius: 6px; border: 1px solid var(--border); cursor: pointer; }
+    .build-proj-header.active { border-color: var(--green); background: rgba(52,211,153,.04); }
+    .build-proj-header.active-sug { border-color: var(--accent2); background: rgba(167,139,250,.06); }
+    .build-proj-header.inactive { border-color: var(--border); opacity: .6; }
+    .build-proj-title { font-weight: 600; font-size: 13px; flex: 1; }
+    .build-proj-bullets { padding-left: 8px; }
+
+    /* Version ID */
+    .version-badge { display: inline-flex; align-items: center; gap: 6px; font-family: 'Courier New', monospace; font-size: 11px; background: var(--surface2); border: 1px solid var(--border); border-radius: 5px; padding: 4px 8px; color: var(--accent); margin-top: 8px; width: 100%; }
+    .version-badge .copy-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 11px; padding: 0; margin-left: auto; }
+    .version-badge .copy-btn:hover { color: var(--text); }
+
+    /* Ideas tab */
+    .ideas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+    .idea-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; }
+    .idea-card:hover { border-color: rgba(167,139,250,.4); }
+    .idea-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .idea-tagline { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+    .idea-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+    .idea-tag { font-size: 10px; padding: 1px 7px; border-radius: 10px; background: rgba(108,138,255,.12); color: var(--accent); border: 1px solid rgba(108,138,255,.2); }
+    .idea-meta { font-size: 11px; color: var(--muted); display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .status-badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+    .status-idea { background: rgba(251,191,36,.1); color: var(--yellow); border: 1px solid rgba(251,191,36,.2); }
+    .status-building { background: rgba(96,165,250,.1); color: var(--blue); border: 1px solid rgba(96,165,250,.2); }
+    .status-built { background: rgba(52,211,153,.1); color: var(--green); border: 1px solid rgba(52,211,153,.2); }
+    .idea-actions { display: flex; gap: 6px; margin-top: 8px; }
+
+    /* Misc */
+    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(108,138,255,.3); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty-state { text-align: center; padding: 30px; color: var(--muted); font-size: 13px; }
+    .alert { border-radius: 6px; padding: 10px 12px; font-size: 12px; margin-bottom: 10px; }
+    .alert-warn { background: rgba(251,191,36,.1); border: 1px solid rgba(251,191,36,.25); color: var(--yellow); }
+    .alert-error { background: rgba(248,113,113,.1); border: 1px solid rgba(248,113,113,.25); color: var(--red); }
+    .alert-success { background: rgba(52,211,153,.1); border: 1px solid rgba(52,211,153,.25); color: var(--green); }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+    .top-count-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 13px; color: var(--muted); }
+    .top-count-input { width: 48px; background: var(--surface2); border: 1px solid var(--border); border-radius: 5px; color: var(--text); font-family: var(--font); font-size: 13px; padding: 3px 7px; text-align: center; }
+    textarea:focus, input:focus { outline: none; }
+    .tech-chip { font-size: 10px; padding: 1px 7px; border-radius: 10px; background: rgba(167,139,250,.12); color: var(--accent2); border: 1px solid rgba(167,139,250,.2); }
+    .build-chip { font-size: 10px; padding: 1px 7px; border-radius: 10px; background: rgba(251,191,36,.1); color: var(--yellow); border: 1px solid rgba(251,191,36,.2); }
+    .recreate-row { display: flex; gap: 6px; margin-top: 10px; }
+    .recreate-input { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 5px; color: var(--text); font-family: 'Courier New', monospace; font-size: 11px; padding: 5px 8px; }
+    .recreate-input:focus { border-color: var(--accent); outline: none; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">ResumeKit <span>/ Rajat</span></div>
+  <button class="tab-btn active"  onclick="showTab('source',  this)">Source Truth</button>
+  <button class="tab-btn"         onclick="showTab('analyze', this)">Analyze JD</button>
+  <button class="tab-btn"         onclick="showTab('build',   this)">Build Resume</button>
+  <button class="tab-btn"         onclick="showTab('ideas',   this); loadIdeas()">Ideas</button>
+</nav>
+
+<!-- ══════════════════════════ SOURCE TRUTH ══════════════════════════ -->
+<div id="tab-source" class="page active">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <div>
+      <div style="font-size:18px;font-weight:700;">Source Truth</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px;">Edit personal info, education, skills, and bullet library. All changes sync to PDF.</div>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="reloadSource()">↻ Reload</button>
+  </div>
+  <div id="source-content"><div class="empty-state"><div class="spinner"></div><br>Loading…</div></div>
+</div>
+
+<!-- ══════════════════════════ ANALYZE ══════════════════════════════ -->
+<div id="tab-analyze" class="page">
+  <div style="font-size:18px;font-weight:700;margin-bottom:4px;">Analyze Job Description</div>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:16px;">Paste a JD or drop a URL — get keywords, grade, and gap map.</div>
+  <div class="analyze-layout">
+    <div>
+      <textarea id="jd-input" class="jd-input" placeholder="Paste job description here, or drop a URL (https://...)"></textarea>
+      <div style="display:flex;gap:10px;margin-top:10px;align-items:center;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="runAnalysis(true)">
+          <span id="analyze-spinner" style="display:none" class="spinner"></span>
+          Analyze with AI
+        </button>
+        <button class="btn btn-ghost" onclick="runAnalysis(false)">Regex (free)</button>
+        <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);cursor:pointer;">
+          <input type="checkbox" id="suggest-toggle" style="accent-color:var(--accent2);">
+          Suggest project for gaps
+        </label>
+        <span id="analyze-cost" style="font-size:11px;color:var(--muted);margin-left:auto;"></span>
+      </div>
+      <div id="analyze-error" style="margin-top:10px;"></div>
+      <!-- Suggested project card (shown after AI analysis when toggle is on) -->
+      <div id="suggested-project-card" style="display:none;"></div>
+    </div>
+    <div id="analysis-result" style="display:none;">
+      <div id="grade-badge" class="grade-badge">—</div>
+      <div class="card" style="margin-top:0;"><div id="meta-rows"></div></div>
+      <div id="gap-buckets"></div>
+      <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="sendToBuild()">Use in Resume Builder →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ BUILD ════════════════════════════════ -->
+<div id="tab-build" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <div>
+      <div style="font-size:18px;font-weight:700;">Resume Builder</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px;">Backend ranked your projects for this JD. Toggle to override. Score updates live.</div>
+    </div>
+    <div id="build-no-jd" style="font-size:12px;color:var(--yellow);display:none;">⚠ Run analysis first to get ranked projects.</div>
+  </div>
+  <div class="build-layout">
+    <div id="build-sections"></div>
+    <div class="score-panel card">
+      <div class="score-ring">
+        <div class="score-pct" id="score-pct">—</div>
+        <div class="score-label" id="score-grade">Run analysis to see score</div>
+      </div>
+      <hr class="divider">
+      <div id="score-breakdown" style="font-size:12px;color:var(--muted);"></div>
+      <div class="export-btns">
+        <button class="btn btn-ghost" onclick="exportLatex()">⬇ Download .tex</button>
+        <button class="btn btn-primary" onclick="exportPDF()">⬇ Download PDF</button>
+      </div>
+      <div id="export-note" style="font-size:11px;color:var(--muted);margin-top:8px;text-align:center;"></div>
+      <div id="version-display" style="display:none;">
+        <div class="version-badge">
+          <span id="version-id-text"></span>
+          <button class="copy-btn" onclick="copyVersionId()" title="Copy ID">⎘ copy</button>
+        </div>
+      </div>
+      <hr class="divider">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600;">RECREATE BY ID</div>
+      <div class="recreate-row">
+        <input class="recreate-input" id="recreate-input" placeholder="R20260429-1320-a3f2">
+        <button class="btn btn-ghost btn-sm" onclick="recreateVersion()">Load</button>
+      </div>
+      <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:6px;" onclick="openHistory()">📋 View History</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ IDEAS ════════════════════════════════ -->
+<div id="tab-ideas" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <div>
+      <div style="font-size:18px;font-weight:700;">Project Ideas Directory</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px;">LLM-suggested projects saved from gap analysis. Track build status.</div>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="loadIdeas()">↻ Reload</button>
+  </div>
+  <div id="ideas-content"><div class="empty-state">No ideas saved yet. Run AI analysis with "Suggest project for gaps" enabled.</div></div>
+</div>
+
+<!-- ══════════════════════════ MODALS ════════════════════════════════ -->
+<div id="modal-overlay" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h3 id="modal-title">Add</h3>
+    <div id="modal-body"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="modal-confirm" onclick="modalConfirm()">Add</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// State
+// ─────────────────────────────────────────────────────────────────────────────
+let sourceData = null;
+let analysisResult = null;
+let selectedBullets = new Set();
+let activeProjects = new Set();
+let editingBullets = new Set();
+let modalAction = null;
+let topN = 4;
+let suggestedProject = null;   // LLM-generated suggested project
+let includeSuggested = false;  // toggle: include suggested project in build
+let lastVersionId = null;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Tabs
+// ─────────────────────────────────────────────────────────────────────────────
+function showTab(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// API
+// ─────────────────────────────────────────────────────────────────────────────
+async function api(method, path, body) {
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
+  if (body !== undefined) opts.body = JSON.stringify(body);
+  const r = await fetch(path, opts);
+  if (!r.ok) {
+    const err = await r.json().catch(() => ({ detail: r.statusText }));
+    throw new Error(err.detail || r.statusText);
+  }
+  return r;
+}
+async function apiJson(method, path, body) { return (await api(method, path, body)).json(); }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SOURCE TRUTH
+// ─────────────────────────────────────────────────────────────────────────────
+async function reloadSource() {
+  sourceData = await apiJson('GET', '/api/source-truth');
+  renderSource();
+}
+
+function renderSource() {
+  const c = document.getElementById('source-content');
+  if (!sourceData) { c.innerHTML = '<div class="empty-state">No data</div>'; return; }
+  let html = '';
+
+  // ── Personal Info ──────────────────────────────────────────────────────────
+  const p = sourceData.personal || {};
+  html += `<div class="section-hdr"><h2 class="section-title">Personal Info</h2></div>
+  <div class="card" style="margin-bottom:14px;">
+    <div class="form-grid">
+      <div class="form-group"><label class="form-label">Name</label>
+        <input class="form-input" id="p-name" value="${escHtml(p.name||'')}"></div>
+      <div class="form-group"><label class="form-label">Location</label>
+        <input class="form-input" id="p-location" value="${escHtml(p.location||'')}"></div>
+      <div class="form-group"><label class="form-label">Phone</label>
+        <input class="form-input" id="p-phone" value="${escHtml(p.phone||'')}"></div>
+      <div class="form-group"><label class="form-label">Email</label>
+        <input class="form-input" id="p-email" value="${escHtml(p.email||'')}"></div>
+      <div class="form-group"><label class="form-label">LinkedIn (no https://)</label>
+        <input class="form-input" id="p-linkedin" value="${escHtml(p.linkedin||'')}"></div>
+      <div class="form-group"><label class="form-label">GitHub (no https://)</label>
+        <input class="form-input" id="p-github" value="${escHtml(p.github||'')}"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Note (OPT/visa line)</label>
+      <input class="form-input" id="p-note" value="${escHtml(p.note||'')}"></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+      <button class="btn btn-primary btn-sm" onclick="savePersonal()">Save Personal Info</button>
+    </div>
+  </div>`;
+
+  // ── Education ──────────────────────────────────────────────────────────────
+  html += `<div class="section-hdr" style="margin-top:4px;">
+    <h2 class="section-title">Education</h2>
+    <button class="btn btn-green btn-sm" onclick="openAddEducation()">+ Add</button>
+  </div>
+  <div id="edu-list">`;
+  for (let i = 0; i < (sourceData.education||[]).length; i++) {
+    html += renderEduCard(sourceData.education[i], i);
+  }
+  html += `</div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
+    <button class="btn btn-primary btn-sm" onclick="saveEducation()">Save Education</button>
+  </div>`;
+
+  // ── Skills ─────────────────────────────────────────────────────────────────
+  const sk = sourceData.skills || {};
+  html += `<div class="section-hdr" style="margin-top:4px;"><h2 class="section-title">Skills</h2></div>
+  <div class="card" style="margin-bottom:14px;">`;
+  for (const [cat, vals] of Object.entries(sk)) {
+    const label = cat.charAt(0).toUpperCase() + cat.slice(1);
+    html += `<div class="form-group">
+      <label class="form-label">${escHtml(label)} (comma separated)</label>
+      <input class="form-input" id="sk-${cat}" value="${escHtml((vals||[]).join(', '))}">
+    </div>`;
+  }
+  html += `<div style="display:flex;justify-content:flex-end;margin-top:4px;">
+    <button class="btn btn-primary btn-sm" onclick="saveSkills()">Save Skills</button>
+  </div></div>`;
+
+  // ── Work Experience ────────────────────────────────────────────────────────
+  html += `<div class="section-hdr" style="margin-top:4px;">
+    <h2 class="section-title">Work Experience</h2>
+    <button class="btn btn-green btn-sm" onclick="openAddWork()">+ Add Role</button>
+  </div>`;
+  for (const role of sourceData.work_experience) {
+    html += `<div class="card">
+      <div class="role-header">
+        <div>
+          <div class="role-title">${escHtml(role.title)}</div>
+          <div class="role-meta">${escHtml(role.company)} · ${escHtml(role.period)}</div>
+        </div>
+        <button class="btn btn-danger btn-sm" onclick="deleteWork('${role.id}')">Remove</button>
+      </div>`;
+    html += renderBulletList(role.bullets);
+    html += `<button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="openAddBullet('work_experience','${role.id}')">+ Add bullet</button>
+    </div>`;
+  }
+
+  // ── Projects ───────────────────────────────────────────────────────────────
+  html += `<div class="section-hdr" style="margin-top:8px;">
+    <h2 class="section-title">Projects</h2>
+    <button class="btn btn-green btn-sm" onclick="openAddProject()">+ Add Project</button>
+  </div>`;
+  for (const proj of sourceData.projects) {
+    html += `<div class="card">
+      <div class="role-header">
+        <div class="role-title">${escHtml(proj.name)}</div>
+        <button class="btn btn-danger btn-sm" onclick="deleteProject('${proj.id}')">Remove</button>
+      </div>`;
+    html += renderBulletList(proj.bullets);
+    html += `<button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="openAddBullet('projects','${proj.id}')">+ Add bullet</button>
+    </div>`;
+  }
+
+  c.innerHTML = html;
+}
+
+function renderEduCard(edu, idx) {
+  return `<div class="card" id="edu-card-${idx}" style="margin-bottom:10px;">
+    <div class="form-grid">
+      <div class="form-group" style="grid-column:1/-1"><label class="form-label">School</label>
+        <input class="form-input" id="edu-school-${idx}" value="${escHtml(edu.school||'')}"></div>
+      <div class="form-group"><label class="form-label">Degree</label>
+        <input class="form-input" id="edu-degree-${idx}" value="${escHtml(edu.degree||'')}"></div>
+      <div class="form-group"><label class="form-label">GPA</label>
+        <input class="form-input" id="edu-gpa-${idx}" value="${escHtml(edu.gpa||'')}"></div>
+      <div class="form-group"><label class="form-label">Period</label>
+        <input class="form-input" id="edu-period-${idx}" value="${escHtml(edu.period||'')}"></div>
+      <div class="form-group"><label class="form-label">Location</label>
+        <input class="form-input" id="edu-location-${idx}" value="${escHtml(edu.location||'')}"></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:4px;">
+      <button class="btn btn-danger btn-sm" onclick="removeEduCard(${idx})">Remove Entry</button>
+    </div>
+  </div>`;
+}
+
+function removeEduCard(idx) {
+  sourceData.education.splice(idx, 1);
+  document.getElementById('source-content').innerHTML = '';
+  renderSource();
+}
+
+// ── Personal save ──────────────────────────────────────────────────────────
+async function savePersonal() {
+  const personal = {
+    name:     document.getElementById('p-name').value.trim(),
+    location: document.getElementById('p-location').value.trim(),
+    phone:    document.getElementById('p-phone').value.trim(),
+    email:    document.getElementById('p-email').value.trim(),
+    linkedin: document.getElementById('p-linkedin').value.trim(),
+    github:   document.getElementById('p-github').value.trim(),
+    note:     document.getElementById('p-note').value.trim(),
+  };
+  try {
+    await apiJson('PUT', '/api/personal', { personal });
+    sourceData.personal = personal;
+    showToast('Personal info saved');
+  } catch(e) { alert('Save failed: ' + e.message); }
+}
+
+// ── Education save ─────────────────────────────────────────────────────────
+function readEduFromDOM() {
+  const edu = [];
+  for (let i = 0; i < (sourceData.education || []).length; i++) {
+    const card = document.getElementById('edu-card-' + i);
+    if (!card) continue;
+    edu.push({
+      id: sourceData.education[i].id || ('edu_' + i),
+      school:   document.getElementById('edu-school-' + i).value.trim(),
+      degree:   document.getElementById('edu-degree-' + i).value.trim(),
+      gpa:      document.getElementById('edu-gpa-' + i).value.trim(),
+      period:   document.getElementById('edu-period-' + i).value.trim(),
+      location: document.getElementById('edu-location-' + i).value.trim(),
+    });
+  }
+  return edu;
+}
+
+async function saveEducation() {
+  const education = readEduFromDOM();
+  try {
+    await apiJson('PUT', '/api/education', { education });
+    sourceData.education = education;
+    showToast('Education saved');
+  } catch(e) { alert('Save failed: ' + e.message); }
+}
+
+// ── Skills save ────────────────────────────────────────────────────────────
+async function saveSkills() {
+  const skills = {};
+  for (const cat of Object.keys(sourceData.skills || {})) {
+    const el = document.getElementById('sk-' + cat);
+    if (el) skills[cat] = el.value.split(',').map(s => s.trim()).filter(Boolean);
+  }
+  try {
+    await apiJson('PUT', '/api/skills', { skills });
+    sourceData.skills = skills;
+    showToast('Skills saved');
+  } catch(e) { alert('Save failed: ' + e.message); }
+}
+
+// ── Toast ──────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  let t = document.getElementById('toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'toast';
+    t.style.cssText = 'position:fixed;bottom:20px;right:20px;background:#34d399;color:#000;padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600;z-index:200;transition:opacity .3s;';
+    document.body.appendChild(t);
+  }
+  t.textContent = '✓ ' + msg;
+  t.style.opacity = '1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.style.opacity = '0'; }, 2000);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Bullet list rendering (Source Truth)
+// ─────────────────────────────────────────────────────────────────────────────
+function renderBulletList(bullets) {
+  return bullets.map(b => renderBullet(b)).join('');
+}
+
+function renderBullet(b) {
+  const tags = (b.keywords || []).map(k => {
+    const isImpl = k.startsWith('~');
+    const label = isImpl ? k.slice(1) : k;
+    return `<span class="kw-tag ${isImpl ? 'kw-implicit' : 'kw-bullet'}">${label}</span>`;
+  }).join('');
+
+  return `<div class="bullet-item" id="bullet-${b.id}">
+    <div class="bullet-text" id="btext-${b.id}">${escHtml(b.text)}</div>
+    <textarea class="bullet-textarea" id="btextarea-${b.id}" style="display:none">${escHtml(b.text)}</textarea>
+    <div class="latex-label" id="blatex-label-${b.id}" style="display:none">LaTeX version</div>
+    <textarea class="latex-textarea" id="blatextarea-${b.id}" style="display:none">${escHtml(b.latex || b.text)}</textarea>
+    <div class="bullet-meta">${tags}</div>
+    <div class="bullet-meta" id="bkw-edit-${b.id}" style="display:none">
+      <input class="kw-tag-input" id="bkwinput-${b.id}" placeholder="keywords, comma separated (prefix ~ for implicit)" value="${escHtml((b.keywords||[]).join(', '))}">
+    </div>
+    <div class="bullet-actions">
+      <button class="btn btn-ghost btn-sm" onclick="toggleEdit('${b.id}')">Edit</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteBullet('${b.id}')">Delete</button>
+    </div>
+    <div id="bedit-actions-${b.id}" style="display:none;gap:6px;align-items:center;margin-top:6px;">
+      <button class="btn btn-primary btn-sm" onclick="saveBullet('${b.id}')">Save</button>
+      <button class="btn btn-ghost btn-sm" onclick="cancelEdit('${b.id}')">Cancel</button>
+    </div>
+  </div>`;
+}
+
+function toggleEdit(id) {
+  if (editingBullets.has(id)) { cancelEdit(id); return; }
+  editingBullets.add(id);
+  document.getElementById('btext-' + id).style.display = 'none';
+  document.getElementById('btextarea-' + id).style.display = 'block';
+  document.getElementById('blatex-label-' + id).style.display = 'block';
+  document.getElementById('blatextarea-' + id).style.display = 'block';
+  document.getElementById('bkw-edit-' + id).style.display = 'flex';
+  document.getElementById('bedit-actions-' + id).style.display = 'flex';
+  document.querySelector(`#bullet-${id} .bullet-actions`).style.display = 'none';
+}
+
+function cancelEdit(id) {
+  editingBullets.delete(id);
+  document.getElementById('btext-' + id).style.display = 'block';
+  document.getElementById('btextarea-' + id).style.display = 'none';
+  document.getElementById('blatex-label-' + id).style.display = 'none';
+  document.getElementById('blatextarea-' + id).style.display = 'none';
+  document.getElementById('bkw-edit-' + id).style.display = 'none';
+  document.getElementById('bedit-actions-' + id).style.display = 'none';
+  document.querySelector(`#bullet-${id} .bullet-actions`).style.display = 'flex';
+}
+
+async function saveBullet(id) {
+  const text = document.getElementById('btextarea-' + id).value.trim();
+  const latex = document.getElementById('blatextarea-' + id).value.trim();
+  const keywords = document.getElementById('bkwinput-' + id).value.split(',').map(k => k.trim()).filter(Boolean);
+  try {
+    await apiJson('PUT', '/api/bullet/update', { bullet_id: id, text, latex, keywords });
+    await reloadSource();
+    editingBullets.delete(id);
+  } catch(e) { alert('Save failed: ' + e.message); }
+}
+
+async function deleteBullet(id) {
+  if (!confirm('Delete this bullet?')) return;
+  try { await apiJson('DELETE', `/api/bullet/${id}`); await reloadSource(); }
+  catch(e) { alert('Delete failed: ' + e.message); }
+}
+
+async function deleteProject(id) {
+  if (!confirm(`Remove project "${id}" and all its bullets?`)) return;
+  try { await apiJson('DELETE', `/api/project/${id}`); await reloadSource(); }
+  catch(e) { alert('Delete failed: ' + e.message); }
+}
+
+async function deleteWork(id) {
+  if (!confirm('Remove this work experience entry?')) return;
+  try { await apiJson('DELETE', `/api/work/${id}`); await reloadSource(); }
+  catch(e) { alert('Delete failed: ' + e.message); }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Modals
+// ─────────────────────────────────────────────────────────────────────────────
+function openModal(title, bodyHtml, action, confirmLabel) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').innerHTML = bodyHtml;
+  document.getElementById('modal-confirm').textContent = confirmLabel || (title.startsWith('Add') ? 'Add' : 'Save');
+  modalAction = action;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  modalAction = null;
+}
+function modalConfirm() { if (modalAction) modalAction(); }
+
+function openAddProject() {
+  openModal('Add Project', `
+    <div class="form-group"><label class="form-label">ID (slug, no spaces)</label><input class="form-input" id="m-proj-id" placeholder="e.g. my-project"></div>
+    <div class="form-group"><label class="form-label">Display Name</label><input class="form-input" id="m-proj-name" placeholder="e.g. My Awesome Project"></div>
+    <div class="form-group"><label class="form-label">Live URL (optional)</label><input class="form-input" id="m-proj-live" placeholder="https://..."></div>
+    <div class="form-group"><label class="form-label">GitHub URL (optional)</label><input class="form-input" id="m-proj-gh" placeholder="https://github.com/..."></div>
+  `, async () => {
+    const id = document.getElementById('m-proj-id').value.trim().replace(/\s+/g,'-');
+    const name = document.getElementById('m-proj-name').value.trim();
+    if (!id || !name) { alert('ID and name are required'); return; }
+    const links = {};
+    const live = document.getElementById('m-proj-live').value.trim();
+    const gh = document.getElementById('m-proj-gh').value.trim();
+    if (live) links.live = live;
+    if (gh) links.github = gh;
+    try {
+      await apiJson('POST', '/api/project/add', { id, name, links, bullets: [] });
+      closeModal();
+      await reloadSource();
+    } catch(e) { alert(e.message); }
+  });
+}
+
+function openAddWork() {
+  openModal('Add Work Experience', `
+    <div class="form-group"><label class="form-label">ID (slug)</label><input class="form-input" id="m-w-id" placeholder="e.g. google-intern"></div>
+    <div class="form-group"><label class="form-label">Job Title</label><input class="form-input" id="m-w-title" placeholder="Software Engineer"></div>
+    <div class="form-group"><label class="form-label">Company</label><input class="form-input" id="m-w-company" placeholder="Company Name"></div>
+    <div class="form-group"><label class="form-label">Period</label><input class="form-input" id="m-w-period" placeholder="Jan 2025 – Present"></div>
+    <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="m-w-loc" placeholder="San Francisco, CA"></div>
+  `, async () => {
+    const id = document.getElementById('m-w-id').value.trim().replace(/\s+/g,'-');
+    const title = document.getElementById('m-w-title').value.trim();
+    const company = document.getElementById('m-w-company').value.trim();
+    const period = document.getElementById('m-w-period').value.trim();
+    const location = document.getElementById('m-w-loc').value.trim();
+    if (!id || !title || !company) { alert('ID, title, and company are required'); return; }
+    try {
+      await apiJson('POST', '/api/work/add', { id, title, company, period, location, bullets: [] });
+      closeModal();
+      await reloadSource();
+    } catch(e) { alert(e.message); }
+  });
+}
+
+function openAddEducation() {
+  openModal('Add Education', `
+    <div class="form-group"><label class="form-label">School</label><input class="form-input" id="m-edu-school" placeholder="University Name"></div>
+    <div class="form-group"><label class="form-label">Degree</label><input class="form-input" id="m-edu-degree" placeholder="B.S. Computer Science"></div>
+    <div class="form-group"><label class="form-label">GPA</label><input class="form-input" id="m-edu-gpa" placeholder="3.8"></div>
+    <div class="form-group"><label class="form-label">Period</label><input class="form-input" id="m-edu-period" placeholder="Aug 2022 – May 2026"></div>
+    <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="m-edu-location" placeholder="City, State"></div>
+  `, async () => {
+    const school   = document.getElementById('m-edu-school').value.trim();
+    const degree   = document.getElementById('m-edu-degree').value.trim();
+    const gpa      = document.getElementById('m-edu-gpa').value.trim();
+    const period   = document.getElementById('m-edu-period').value.trim();
+    const location = document.getElementById('m-edu-location').value.trim();
+    if (!school || !degree) { alert('School and degree are required'); return; }
+    const id = school.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '').slice(0, 20);
+    sourceData.education = sourceData.education || [];
+    sourceData.education.push({ id, school, degree, gpa, period, location });
+    closeModal();
+    renderSource();
+  });
+}
+
+function openAddBullet(section, sectionId) {
+  openModal('Add Bullet', `
+    <div class="form-group"><label class="form-label">Bullet Text (plain)</label>
+      <textarea class="form-textarea" id="m-b-text" placeholder="What you built, how, and the result..."></textarea></div>
+    <div class="form-group"><label class="form-label">LaTeX version <span style="color:var(--muted);font-size:10px;">(use \\textbf{} for bold — leave blank to copy plain text)</span></label>
+      <textarea class="form-textarea" id="m-b-latex" style="font-family:monospace;font-size:12px;" placeholder="Built a \\textbf{React} frontend..."></textarea></div>
+    <div class="form-group"><label class="form-label">Keywords (comma separated, ~ prefix = implicit)</label>
+      <input class="form-input" id="m-b-kw" placeholder="react, node.js, ~distributed systems"></div>
+  `, async () => {
+    const text = document.getElementById('m-b-text').value.trim();
+    const latex = document.getElementById('m-b-latex').value.trim();
+    const keywords = document.getElementById('m-b-kw').value.split(',').map(k=>k.trim()).filter(Boolean);
+    if (!text) { alert('Bullet text is required'); return; }
+    try {
+      await apiJson('POST', '/api/bullet/add', { section, section_id: sectionId, text, latex: latex || text, keywords });
+      closeModal();
+      await reloadSource();
+    } catch(e) { alert(e.message); }
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ANALYZE
+// ─────────────────────────────────────────────────────────────────────────────
+async function runAnalysis(useLlm) {
+  const jd = document.getElementById('jd-input').value.trim();
+  if (!jd) { setAnalyzeError('Paste a JD or URL first.'); return; }
+  const suggestEnabled = useLlm && document.getElementById('suggest-toggle').checked;
+
+  document.getElementById('analyze-spinner').style.display = 'inline-block';
+  document.querySelectorAll('button').forEach(b => b.disabled = true);
+  document.getElementById('analyze-error').innerHTML = '';
+  document.getElementById('analysis-result').style.display = 'none';
+  document.getElementById('suggested-project-card').style.display = 'none';
+
+  try {
+    const result = await apiJson('POST', '/api/analyze', {
+      jd, use_llm: useLlm, suggest_project: suggestEnabled,
+    });
+    analysisResult = result;
+    renderAnalysis(result);
+    document.getElementById('analysis-result').style.display = 'block';
+
+    if (result.cost_usd > 0)
+      document.getElementById('analyze-cost').textContent = `~$${result.cost_usd.toFixed(5)}`;
+
+    // Handle suggested project
+    suggestedProject = result.suggested_project || null;
+    includeSuggested = false;
+    if (suggestedProject) {
+      renderSuggestedCard(suggestedProject);
+      document.getElementById('suggested-project-card').style.display = 'block';
+    }
+  } catch(e) { setAnalyzeError(e.message); }
+  finally {
+    document.getElementById('analyze-spinner').style.display = 'none';
+    document.querySelectorAll('button').forEach(b => b.disabled = false);
+  }
+}
+
+function setAnalyzeError(msg) {
+  document.getElementById('analyze-error').innerHTML = `<div class="alert alert-error">${escHtml(msg)}</div>`;
+}
+
+function renderAnalysis(r) {
+  const badge = document.getElementById('grade-badge');
+  const gradeClass = r.grade === 'A+' ? 'Ap' : r.grade;
+  badge.textContent = r.grade;
+  badge.className = 'grade-badge ' + gradeClass;
+
+  document.getElementById('meta-rows').innerHTML = `
+    <div class="meta-row"><span>Coverage</span><span>${r.coverage_pct}%</span></div>
+    <div class="meta-row"><span>HH Ratio</span><span>${r.hh_ratio}</span></div>
+    <div class="meta-row"><span>JD keywords</span><span>${r.total_jd_keywords}</span></div>
+    <div class="meta-row"><span>Matched</span><span>${r.matched} / ${r.total_jd_keywords}</span></div>
+    <div class="meta-row"><span>Apply?</span><span style="color:${r.apply_recommended?'var(--green)':'var(--red)'}">
+      ${r.apply_recommended ? '✓ Yes' : '✗ Below threshold'}</span></div>
+  `;
+
+  let html = '';
+  if (r.real_gap.length)    html += renderBucket('Real Gaps',    r.real_gap,    'gap-real',    'var(--red)',    '✗');
+  if (r.can_surface.length) html += renderBucket('Can Surface',  r.can_surface, 'gap-surface', 'var(--yellow)', '~');
+  if (r.skills_only.length) html += renderBucket('Skills Only',  r.skills_only, 'gap-skills',  'var(--blue)',   '•');
+  if (r.covered.length)     html += renderBucket('Covered',      r.covered,     'gap-covered', 'var(--green)',  '✓');
+  document.getElementById('gap-buckets').innerHTML = html;
+}
+
+function renderBucket(title, items, cls, color, icon) {
+  const rows = items.map(item => {
+    const hint = (item.bullets||[]).length ? `Found in: ${[...new Set(item.bullets.map(b=>b.section_id))].join(', ')}` : '';
+    return `<div class="gap-row ${cls}">
+      <span class="kw-name">${icon} ${escHtml(item.keyword)}</span>
+      ${hint ? `<div class="surface-hint">${escHtml(hint)}</div>` : ''}
+    </div>`;
+  }).join('');
+  return `<div class="gap-bucket">
+    <div class="gap-bucket-title" style="color:${color}">${title} <span class="count">${items.length}</span></div>
+    ${rows}
+  </div>`;
+}
+
+function renderSuggestedCard(proj) {
+  if (!proj) return;
+  const techChips = (proj.tech_stack||[]).map(t => `<span class="tech-chip">${escHtml(t)}</span>`).join('');
+  const kwChips = (proj.keywords_covered||[]).map(k => `<span class="kw-tag kw-bullet">${escHtml(k)}</span>`).join('');
+  const bullets = (proj.bullets||[]).map(b =>
+    `<div class="suggested-bullet">▸ ${escHtml(b.text)}</div>`
+  ).join('');
+
+  const html = `
+    <div class="suggested-card">
+      <div class="suggested-card-header">
+        <div>
+          <div class="suggested-label">✦ AI Project Suggestion</div>
+          <div class="suggested-name">${escHtml(proj.name||'')}</div>
+          <div class="suggested-tagline">${escHtml(proj.tagline||'')}</div>
+        </div>
+        ${proj.build_time ? `<span class="build-chip">~${escHtml(proj.build_time)}</span>` : ''}
+      </div>
+      <div class="suggested-meta">${techChips}</div>
+      ${proj.why_this_jd ? `<div class="suggested-why">🎯 ${escHtml(proj.why_this_jd)}</div>` : ''}
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600;">KEYWORDS COVERED</div>
+      <div class="bullet-meta" style="margin-bottom:8px;">${kwChips}</div>
+      <div class="suggested-bullets">${bullets}</div>
+      <div class="suggested-actions">
+        <label class="include-toggle ${includeSuggested ? 'on' : ''}" id="include-toggle-lbl" onclick="toggleIncludeSuggested()">
+          <input type="checkbox" id="include-check" ${includeSuggested ? 'checked' : ''} onclick="event.stopPropagation()">
+          ${includeSuggested ? '✓ Included in Builder' : 'Include in Builder'}
+        </label>
+        <button class="btn btn-purple btn-sm" onclick="saveIdeaFromCard()">Save to Ideas</button>
+      </div>
+    </div>`;
+  document.getElementById('suggested-project-card').innerHTML = html;
+}
+
+function toggleIncludeSuggested() {
+  includeSuggested = !includeSuggested;
+  const lbl = document.getElementById('include-toggle-lbl');
+  const chk = document.getElementById('include-check');
+  if (lbl) { lbl.className = `include-toggle ${includeSuggested ? 'on' : ''}`; lbl.childNodes[lbl.childNodes.length-1].textContent = includeSuggested ? ' ✓ Included in Builder' : ' Include in Builder'; }
+  if (chk) chk.checked = includeSuggested;
+}
+
+async function saveIdeaFromCard() {
+  if (!suggestedProject) return;
+  const jdText = document.getElementById('jd-input').value.trim();
+  try {
+    await apiJson('POST', '/api/project-ideas/save', {
+      idea: suggestedProject,
+      jd_snippet: jdText.slice(0, 200),
+    });
+    showToast('Saved to Ideas directory');
+  } catch(e) { alert('Save failed: ' + e.message); }
+}
+
+function sendToBuild() {
+  if (!analysisResult) return;
+  selectedBullets = new Set();
+  activeProjects = new Set();
+  buildResume();
+  showTab('build', document.querySelectorAll('.tab-btn')[2]);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BUILD
+// ─────────────────────────────────────────────────────────────────────────────
+function buildResume() {
+  if (!sourceData) { reloadSource().then(buildResume); return; }
+
+  const hasAnalysis = !!analysisResult;
+  document.getElementById('build-no-jd').style.display = hasAnalysis ? 'none' : 'block';
+
+  const coveredKws = new Set((analysisResult?.covered    || []).map(i => i.keyword));
+  const surfaceKws = new Set((analysisResult?.can_surface || []).map(i => i.keyword));
+  const ranked     = analysisResult?.ranked_projects || [];
+
+  if (hasAnalysis && activeProjects.size === 0) {
+    ranked.slice(0, topN).forEach(p => activeProjects.add(p.id));
+  }
+  if (!hasAnalysis && activeProjects.size === 0) {
+    sourceData.projects.forEach(p => activeProjects.add(p.id));
+  }
+
+  if (selectedBullets.size === 0) {
+    for (const role of sourceData.work_experience)
+      for (const b of role.bullets) selectedBullets.add(b.id);
+    for (const proj of sourceData.projects)
+      if (activeProjects.has(proj.id))
+        for (const b of proj.bullets) selectedBullets.add(b.id);
+  }
+
+  let html = '';
+
+  // ── Work Experience ────────────────────────────────────────────────────────
+  html += `<div style="margin-bottom:6px;"><h2 class="section-title">Work Experience <span style="font-size:11px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(always included)</span></h2></div>`;
+  for (const role of sourceData.work_experience) {
+    html += `<div class="card">
+      <div class="role-header" style="margin-bottom:8px;">
+        <div>
+          <div class="role-title">${escHtml(role.title)}</div>
+          <div class="role-meta">${escHtml(role.company)} · ${escHtml(role.period)}</div>
+        </div>
+      </div>`;
+    for (const b of role.bullets) html += renderBuildBullet(b, coveredKws, surfaceKws);
+    html += `</div>`;
+  }
+
+  // ── Project Ranking ────────────────────────────────────────────────────────
+  html += `<div style="margin-top:16px;margin-bottom:8px;"><h2 class="section-title">Projects</h2>`;
+
+  if (hasAnalysis) {
+    html += `<div class="top-count-row" style="margin-top:8px;">
+      Show top <input class="top-count-input" id="top-n-input" type="number" min="1" max="${sourceData.projects.length}" value="${topN}" onchange="changeTopN(this.value)">
+      of ${sourceData.projects.length} projects (ranked by JD match)
+    </div>
+    <div class="proj-rank-grid">`;
+    ranked.forEach((p, i) => {
+      const isActive = activeProjects.has(p.id);
+      const rankCls = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
+      const ordinal = i === 0 ? '1st' : i === 1 ? '2nd' : i === 2 ? '3rd' : `${i+1}th`;
+      const pct = Math.round(p.score * 100);
+      html += `<div class="proj-rank-card ${isActive ? 'recommended' : 'excluded'}" id="rankcard-${p.id}" onclick="toggleProject('${p.id}')">
+        <div class="proj-rank-name">
+          <span class="rank-badge ${rankCls}">${ordinal}</span>
+          ${escHtml(p.name)}
+          ${isActive ? '<span style="color:var(--green);margin-left:auto">✓</span>' : '<span style="color:var(--muted);margin-left:auto">○</span>'}
+        </div>
+        <div class="proj-rank-score">${p.matched_count} keywords · ${pct}% overlap</div>
+        <div class="proj-rank-bar"><div class="proj-rank-bar-fill" style="width:${pct}%"></div></div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Suggested project rank card
+  if (includeSuggested && suggestedProject) {
+    html += `<div class="proj-rank-card" style="border-color:var(--accent2);background:rgba(167,139,250,.06);margin-bottom:8px;" onclick="toggleSuggestedInBuild()">
+      <div class="proj-rank-name">
+        <span class="rank-badge" style="background:rgba(167,139,250,.2);color:var(--accent2)">AI</span>
+        ${escHtml(suggestedProject.name||'Suggested Project')}
+        <span style="color:var(--accent2);margin-left:auto">✓</span>
+      </div>
+      <div class="proj-rank-score">${(suggestedProject.keywords_covered||[]).length} gaps covered</div>
+    </div>`;
+  } else if (suggestedProject && !includeSuggested) {
+    html += `<div class="proj-rank-card excluded" style="border-color:rgba(167,139,250,.2);" onclick="toggleSuggestedInBuild()">
+      <div class="proj-rank-name">
+        <span class="rank-badge" style="background:rgba(167,139,250,.2);color:var(--accent2)">AI</span>
+        ${escHtml(suggestedProject.name||'Suggested Project')} <span style="font-size:11px;color:var(--muted);font-weight:400"> (suggested)</span>
+        <span style="color:var(--muted);margin-left:auto">○</span>
+      </div>
+      <div class="proj-rank-score">Click to include</div>
+    </div>`;
+  }
+
+  html += `</div>`;
+
+  // ── Project Bullet Toggles ─────────────────────────────────────────────────
+  const orderedProjects = hasAnalysis
+    ? ranked.map(r => sourceData.projects.find(p => p.id === r.id)).filter(Boolean)
+    : sourceData.projects;
+
+  for (const proj of orderedProjects) {
+    const isActive = activeProjects.has(proj.id);
+    html += `<div class="build-proj-section" id="buildproj-${proj.id}">
+      <div class="build-proj-header ${isActive ? 'active' : 'inactive'}" onclick="toggleProject('${proj.id}')">
+        <div class="build-proj-title">${escHtml(proj.name)}</div>
+        <span style="font-size:11px;color:${isActive ? 'var(--green)' : 'var(--muted)'}">
+          ${isActive ? '✓ included' : '○ excluded'}
+        </span>
+      </div>
+      <div class="build-proj-bullets" id="buildproj-bullets-${proj.id}" style="${isActive ? '' : 'display:none'}">`;
+    for (const b of proj.bullets) html += renderBuildBullet(b, coveredKws, surfaceKws);
+    html += `</div></div>`;
+  }
+
+  // ── Suggested project bullets ──────────────────────────────────────────────
+  if (includeSuggested && suggestedProject) {
+    html += `<div class="build-proj-section" id="buildproj-_suggested">
+      <div class="build-proj-header active-sug" onclick="toggleSuggestedInBuild()">
+        <div class="build-proj-title">✦ ${escHtml(suggestedProject.name||'Suggested Project')}</div>
+        <span style="font-size:11px;color:var(--accent2)">✓ included (AI)</span>
+      </div>
+      <div class="build-proj-bullets">`;
+    for (const b of (suggestedProject.bullets||[])) {
+      html += renderBuildBullet(b, coveredKws, surfaceKws, true);
+    }
+    html += `</div></div>`;
+  }
+
+  document.getElementById('build-sections').innerHTML = html;
+  updateScore();
+}
+
+function toggleSuggestedInBuild() {
+  includeSuggested = !includeSuggested;
+  if (includeSuggested && suggestedProject) {
+    for (const b of (suggestedProject.bullets||[])) selectedBullets.add(b.id);
+  } else if (suggestedProject) {
+    for (const b of (suggestedProject.bullets||[])) selectedBullets.delete(b.id);
+  }
+  buildResume();
+}
+
+function renderBuildBullet(b, coveredKws, surfaceKws, isSuggested) {
+  const isSelected = selectedBullets.has(b.id);
+  const coversTags = [];
+  for (const kw of (b.keywords || [])) {
+    const canonical = kw.startsWith('~') ? kw.slice(1) : kw;
+    if (coveredKws && coveredKws.has(canonical))       coversTags.push(`<span class="gap-tag covers">${escHtml(canonical)}</span>`);
+    else if (surfaceKws && surfaceKws.has(canonical))  coversTags.push(`<span class="gap-tag surfaces">~${escHtml(canonical)}</span>`);
+  }
+  const tagsHtml = coversTags.length ? `<div class="bullet-gap-tags">${coversTags.join('')}</div>` : '';
+  const sugTag = isSuggested ? `<span style="font-size:10px;color:var(--accent2);margin-right:4px;">✦</span>` : '';
+  return `<label class="bullet-toggle ${isSelected ? 'selected' : ''}" id="btoggle-${b.id}">
+    <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleBullet('${b.id}', this.checked)">
+    <div>
+      <div class="bullet-toggle-text">${sugTag}${escHtml(b.text)}</div>
+      ${tagsHtml}
+    </div>
+  </label>`;
+}
+
+function toggleProject(projId) {
+  if (activeProjects.has(projId)) {
+    activeProjects.delete(projId);
+    const proj = sourceData.projects.find(p => p.id === projId);
+    if (proj) proj.bullets.forEach(b => selectedBullets.delete(b.id));
+  } else {
+    activeProjects.add(projId);
+    const proj = sourceData.projects.find(p => p.id === projId);
+    if (proj) proj.bullets.forEach(b => selectedBullets.add(b.id));
+  }
+  buildResume();
+}
+
+function changeTopN(val) {
+  topN = Math.max(1, Math.min(parseInt(val) || 4, sourceData?.projects?.length || 10));
+  if (analysisResult?.ranked_projects) {
+    activeProjects = new Set();
+    analysisResult.ranked_projects.slice(0, topN).forEach(p => activeProjects.add(p.id));
+    selectedBullets = new Set();
+    for (const role of sourceData.work_experience)
+      for (const b of role.bullets) selectedBullets.add(b.id);
+    for (const proj of sourceData.projects)
+      if (activeProjects.has(proj.id))
+        for (const b of proj.bullets) selectedBullets.add(b.id);
+    if (includeSuggested && suggestedProject)
+      for (const b of (suggestedProject.bullets||[])) selectedBullets.add(b.id);
+  }
+  buildResume();
+}
+
+function toggleBullet(id, checked) {
+  if (checked) selectedBullets.add(id);
+  else selectedBullets.delete(id);
+  const el = document.getElementById('btoggle-' + id);
+  if (el) el.className = `bullet-toggle ${checked ? 'selected' : ''}`;
+  updateScore();
+}
+
+function updateScore() {
+  if (!analysisResult) {
+    document.getElementById('score-pct').textContent = '—';
+    document.getElementById('score-grade').textContent = 'Run analysis to see score';
+    return;
+  }
+  const selectedKws = new Set();
+  const allSections = [...sourceData.work_experience, ...sourceData.projects];
+  for (const s of allSections)
+    for (const b of s.bullets)
+      if (selectedBullets.has(b.id))
+        for (const kw of (b.keywords||[]))
+          selectedKws.add(kw.startsWith('~') ? kw.slice(1) : kw);
+
+  // Also count suggested project keywords
+  if (includeSuggested && suggestedProject) {
+    for (const b of (suggestedProject.bullets||[]))
+      if (selectedBullets.has(b.id))
+        for (const kw of (b.keywords||[]))
+          selectedKws.add(kw.startsWith('~') ? kw.slice(1) : kw);
+  }
+
+  const all = analysisResult.keywords;
+  const matched = all.filter(k => selectedKws.has(k)).length;
+  const pct = all.length ? Math.round(matched / all.length * 100) : 0;
+  document.getElementById('score-pct').textContent = pct + '%';
+  document.getElementById('score-grade').textContent = `${matched}/${all.length} JD keywords covered`;
+  document.getElementById('score-breakdown').innerHTML = `
+    <div class="meta-row"><span>Active projects</span><span>${activeProjects.size}${includeSuggested ? ' +AI' : ''}</span></div>
+    <div class="meta-row"><span>Selected bullets</span><span>${selectedBullets.size}</span></div>
+    <div class="meta-row"><span>Keywords matched</span><span>${matched}</span></div>
+  `;
+}
+
+function _buildCompilePayload(format) {
+  const projOrder = analysisResult?.ranked_projects?.map(p => p.id) || [];
+  return {
+    selected_bullet_ids: [...selectedBullets],
+    format,
+    project_order: projOrder,
+    suggested_project: (includeSuggested && suggestedProject) ? suggestedProject : null,
+    jd_snippet: document.getElementById('jd-input')?.value?.slice(0, 200) || '',
+    grade: analysisResult?.grade || '',
+    coverage_pct: analysisResult?.coverage_pct || 0,
+    active_projects: [...activeProjects],
+  };
+}
+
+async function exportLatex() {
+  try {
+    const resp = await api('POST', '/api/compile', _buildCompilePayload('latex'));
+    const vid = resp.headers.get('X-Version-Id');
+    if (vid) showVersionId(vid);
+    downloadBlob(await resp.blob(), `resume-${vid||'draft'}.tex`);
+  } catch(e) { alert('Export failed: ' + e.message); }
+}
+
+async function exportPDF() {
+  const note = document.getElementById('export-note');
+  note.textContent = 'Compiling…';
+  try {
+    const resp = await api('POST', '/api/compile', _buildCompilePayload('pdf'));
+    const fallback = resp.headers.get('X-Fallback');
+    const vid = resp.headers.get('X-Version-Id');
+    if (vid) showVersionId(vid);
+    const blob = await resp.blob();
+    if (fallback) {
+      note.textContent = 'pdflatex not found — downloaded .tex instead.';
+      downloadBlob(blob, `resume-${vid||'draft'}.tex`);
+    } else {
+      note.textContent = '✓ Done';
+      downloadBlob(blob, `resume-${vid||'draft'}.pdf`);
+    }
+  } catch(e) { note.textContent = ''; alert('Export failed: ' + e.message); }
+}
+
+function showVersionId(vid) {
+  lastVersionId = vid;
+  document.getElementById('version-id-text').textContent = vid;
+  document.getElementById('version-display').style.display = 'block';
+}
+
+function copyVersionId() {
+  if (lastVersionId) navigator.clipboard.writeText(lastVersionId).then(() => showToast('Version ID copied'));
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// History + Recreate
+// ─────────────────────────────────────────────────────────────────────────────
+async function openHistory() {
+  let history;
+  try { history = await apiJson('GET', '/api/resume/history'); }
+  catch(e) { alert('Failed to load history: ' + e.message); return; }
+
+  if (!history.length) {
+    openModal('Resume History', '<div class="empty-state">No exports yet. Download a PDF or .tex to create history.</div>', null, 'Close');
+    return;
+  }
+
+  const rows = [...history].reverse().map(h => {
+    const dt = new Date(h.timestamp).toLocaleString();
+    return `<div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:10px 12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+        <code style="font-size:11px;color:var(--accent);">${escHtml(h.id)}</code>
+        <span style="font-size:11px;color:var(--muted);">${escHtml(dt)}</span>
+      </div>
+      <div style="font-size:12px;margin-top:4px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        ${h.grade ? `<span style="color:var(--green);font-weight:700">${escHtml(h.grade)}</span>` : ''}
+        ${h.coverage_pct ? `<span style="color:var(--muted);">${h.coverage_pct}% coverage</span>` : ''}
+        ${h.jd_snippet ? `<span style="color:var(--muted);font-style:italic;">"${escHtml(h.jd_snippet.slice(0,60))}…"</span>` : ''}
+      </div>
+      <div style="margin-top:6px;">
+        <button class="btn btn-ghost btn-sm" onclick="loadVersion('${escHtml(h.id)}')">Load into Builder</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  openModal('Resume History', rows, null, 'Close');
+}
+
+async function loadVersion(vid) {
+  let entry;
+  try { entry = await apiJson('GET', `/api/resume/version/${vid}`); }
+  catch(e) { alert('Version not found: ' + e.message); return; }
+
+  selectedBullets  = new Set(entry.selected_bullet_ids || []);
+  activeProjects   = new Set(entry.active_projects || []);
+  suggestedProject = entry.suggested_project || null;
+  includeSuggested = !!suggestedProject;
+  closeModal();
+  buildResume();
+  showTab('build', document.querySelectorAll('.tab-btn')[2]);
+  showToast('Loaded version ' + vid);
+}
+
+async function recreateVersion() {
+  const vid = document.getElementById('recreate-input').value.trim();
+  if (!vid) return;
+  await loadVersion(vid);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// IDEAS
+// ─────────────────────────────────────────────────────────────────────────────
+async function loadIdeas() {
+  let ideas;
+  try { ideas = await apiJson('GET', '/api/project-ideas'); }
+  catch(e) { document.getElementById('ideas-content').innerHTML = `<div class="alert alert-error">${escHtml(e.message)}</div>`; return; }
+  renderIdeas(ideas);
+}
+
+function renderIdeas(ideas) {
+  const el = document.getElementById('ideas-content');
+  if (!ideas.length) {
+    el.innerHTML = '<div class="empty-state">No ideas saved yet. Run AI analysis with "Suggest project for gaps" enabled.</div>';
+    return;
+  }
+  const cards = ideas.map(idea => {
+    const techTags = (idea.tech_stack||[]).map(t => `<span class="idea-tag">${escHtml(t)}</span>`).join('');
+    const kwTags = (idea.keywords_covered||[]).map(k => `<span class="kw-tag kw-bullet" style="font-size:10px">${escHtml(k)}</span>`).join('');
+    const status = idea.status || 'idea';
+    const statusCls = status === 'built' ? 'status-built' : status === 'building' ? 'status-building' : 'status-idea';
+    const dt = idea.saved_at ? new Date(idea.saved_at).toLocaleDateString() : '';
+    return `<div class="idea-card">
+      <div class="idea-name">${escHtml(idea.name||'')}</div>
+      <div class="idea-tagline">${escHtml(idea.tagline||'')}</div>
+      <div class="idea-tags">${techTags}</div>
+      ${idea.why_this_jd ? `<div style="font-size:11px;color:var(--muted);margin-bottom:6px;">🎯 ${escHtml(idea.why_this_jd)}</div>` : ''}
+      ${kwTags ? `<div class="bullet-meta" style="margin-bottom:8px;">${kwTags}</div>` : ''}
+      <div class="idea-meta">
+        <span class="status-badge ${statusCls}">${status}</span>
+        <span>${escHtml(dt)}${idea.build_time ? ` · ~${escHtml(idea.build_time)}` : ''}</span>
+      </div>
+      <div class="idea-actions">
+        ${status !== 'building' ? `<button class="btn btn-ghost btn-sm" onclick="setIdeaStatus('${escHtml(idea.name)}', 'building')">Mark Building</button>` : ''}
+        ${status !== 'built' ? `<button class="btn btn-green btn-sm" onclick="setIdeaStatus('${escHtml(idea.name)}', 'built')">Mark Built</button>` : ''}
+        <button class="btn btn-danger btn-sm" onclick="deleteIdea('${escHtml(idea.name)}')">Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+  el.innerHTML = `<div class="ideas-grid">${cards}</div>`;
+}
+
+async function setIdeaStatus(name, status) {
+  try {
+    await apiJson('PUT', '/api/project-ideas/status', { idea_id: name, status });
+    await loadIdeas();
+  } catch(e) { alert('Update failed: ' + e.message); }
+}
+
+async function deleteIdea(name) {
+  if (!confirm(`Delete idea "${name}"?`)) return;
+  try {
+    await api('DELETE', `/api/project-ideas/${encodeURIComponent(name)}`);
+    await loadIdeas();
+  } catch(e) { alert('Delete failed: ' + e.message); }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Util
+// ─────────────────────────────────────────────────────────────────────────────
+function downloadBlob(blob, name) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = name; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+function escHtml(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+reloadSource();
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+Software Engineer, Backend Infrastructure — Meta (Menlo Park, CA)
+
+About the Role
+We are looking for a backend software engineer to join our Infrastructure team. You will design, build, and maintain large-scale distributed systems that power billions of users globally. You will work across the full backend stack, from storage layer optimizations to API design, and will be expected to drive technical decisions independently.
+
+Responsibilities
+- Design and implement scalable backend services handling millions of requests per second
+- Build and maintain distributed systems with high availability and fault tolerance
+- Write production-grade code in Python and contribute to shared Go/Java services
+- Collaborate with cross-functional teams to define API contracts and GraphQL schemas
+- Optimize database performance across PostgreSQL, MySQL, and custom distributed storage
+- Champion CI/CD pipelines and ensure code quality through rigorous code review
+- Work with Docker and Kubernetes for service containerization and orchestration
+- Instrument services with observability tooling (metrics, tracing, logging)
+- Participate in on-call rotations for owned services
+
+Requirements
+- 3+ years of software engineering experience
+- Strong proficiency in one or more of: Python, Go, Java, C++
+- Experience designing and building RESTful APIs and microservices
+- Deep understanding of distributed systems concepts: consensus, replication, partitioning, scalability
+- Hands-on experience with relational databases (PostgreSQL, MySQL) and caching layers (Redis)
+- Familiarity with cloud infrastructure, preferably AWS or GCP
+- Experience with Linux systems programming
+- Strong understanding of data structures, algorithms, and system design
+- Git-based development workflows and CI/CD automation
+
+Bonus
+- Experience with GraphQL API design
+- Familiarity with event sourcing or event-driven architectures
+- Contributions to open source projects
+- Experience with WebSockets or real-time data pipelines

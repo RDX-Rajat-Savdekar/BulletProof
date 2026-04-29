@@ -1,0 +1,33 @@
+Senior Software Engineer — Financial Services Platform — JPMorgan Chase (New York, NY)
+
+About the Role
+Join our Corporate & Investment Bank Technology team to build mission-critical financial infrastructure serving institutional clients. You will work on high-throughput, low-latency trading systems and order management platforms that process millions of transactions daily.
+
+Responsibilities
+- Design and build enterprise Java (Spring Boot) microservices for order management and settlement workflows
+- Implement event-driven architectures using Apache Kafka for real-time trade event streaming
+- Build and optimize Oracle and PostgreSQL database schemas for financial data
+- Integrate with FIX protocol adapters and proprietary trading APIs
+- Implement robust CI/CD pipelines using Jenkins and GitLab
+- Maintain containerized services on Kubernetes (OpenShift)
+- Design RESTful APIs for internal platform consumers
+- Ensure compliance with financial regulatory requirements (PCI-DSS, SOX)
+- Conduct thorough code review and design review of peer contributions
+- Participate in 24/7 on-call rotation for production support
+
+Requirements
+- 5+ years of software engineering experience
+- Deep Java expertise (Java 11+, Spring Boot, Maven/Gradle)
+- Strong SQL skills — Oracle and PostgreSQL
+- Apache Kafka or similar message queuing systems
+- Kubernetes and Docker for containerized deployments
+- Jenkins or GitLab CI for CI/CD pipelines
+- Linux production environment experience
+- Understanding of financial domain: trade lifecycle, settlement, clearing
+- Experience with REST API design and OpenAPI specification
+
+Preferred
+- TIBCO or IBM MQ experience
+- Bloomberg API integration
+- Experience with SWIFT messaging
+- Performance profiling and JVM tuning

@@ -1,0 +1,103 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[margin=0.4in]{geometry}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titling}
+\usepackage{tgschola}
+\usepackage{tabularx}
+\hypersetup{
+  colorlinks=true,
+  urlcolor=blue,
+  linkcolor=black
+}
+\definecolor{customgray}{gray}{0.1}
+\definecolor{Companygray}{gray}{0.2}
+\titleformat{\section}{\large\bfseries}{}{0em}{}
+\newcommand{\mysection}[1]{%
+  \vspace{0.4em}%
+  \noindent{\large\bfseries #1}%
+  \vspace{-0.75em}\par\noindent\rule{\linewidth}{0.6pt}%
+}
+\renewcommand{\labelitemi}{\textbullet}
+\newenvironment{myitemize}{
+  \begin{itemize}[noitemsep, topsep=0pt, leftmargin=1.2em, parsep=0pt, partopsep=0pt]
+}{
+  \end{itemize}%
+}
+\newcommand{\projectentry}[4]{%
+  \vspace{0.35em}%
+  \noindent\textbf{#1} \hfill #4%
+  \vspace{0.1em}%
+}
+\newcommand{\resumeentry}[4]{%
+  \vspace{0.2em}%
+  \noindent\textbf{#1} \hfill #3\\%
+  \textcolor{Companygray}{\textbf{#2}} \hfill \textit{#4}%
+  \vspace{0.25em}%
+}
+\newcommand{\eduentry}[5]{%
+  \vspace{0.1em}%
+  \noindent\textbf{#1 \hspace{2pt}--\hspace{2pt} GPA: #2} \hfill #5 \\%
+  \textbullet\hspace{0.4em}\textcolor{Companygray}{#4} \hfill \textit{#3}\\%
+}
+\begin{document}
+\pagestyle{empty}
+
+% HEADER
+%%PERSONAL_HEADER%%
+
+% EDUCATION
+\mysection{EDUCATION}
+
+%%EDUCATION_BLOCK%%
+
+% WORK EXPERIENCE
+\mysection{WORK EXPERIENCE}
+
+\resumeentry
+  {Teaching Assistant}
+  {USC Summer Programs, Discover Engineering}
+  {May 2025 -- July 2025}
+  {Los Angeles, CA}
+%%BULLETS:ta%%
+\begin{myitemize}
+  \item Guided 2 international teams of 15+ students through \textbf{Python}, \textbf{Git}, and \textbf{RESTful API} development on Raspberry Pi robotics hardware across a 4-week multidisciplinary rotation, with all teams successfully delivering functional prototypes on schedule.
+\end{myitemize}
+%%END:ta%%
+
+\vspace{0.3em}
+
+\resumeentry
+  {Software Engineer}
+  {Jalgaon Fruits Sales Cooperative}
+  {May 2023 -- May 2024}
+  {Jalgaon, India}
+%%BULLETS:jalgaon%%
+\begin{myitemize}
+  \item Built a \textbf{JavaScript}, \textbf{HTML}, and \textbf{CSS} web-based procurement platform backed by a RESTful API, migrating 150 daily users from manual logs to a digital system with 99.9\% uptime across complex inventory transactions.
+  \item Decomposed a legacy monolith into \textbf{Python} microservices and redesigned the \textbf{MySQL} schema, cutting average query time by 40\% on high-frequency supply chain lookups.
+  \item Introduced \textbf{Docker}-based \textbf{CI/CD} pipelines with \textbf{Git}-managed releases, reducing deployment cycle time by 30\% and eliminating manual steps that previously caused production rollbacks.
+\end{myitemize}
+%%END:jalgaon%%
+
+% PROJECTS
+\mysection{PROJECTS}
+
+%%PROJECTS_BLOCK%%
+
+% SKILLS
+\mysection{SKILLS}
+
+\noindent\textbf{Languages:} TypeScript/JavaScript, Python, Java, C++, C\#, HTML/CSS, SQL
+
+\noindent\textbf{Frameworks:} React, Next.js, Node.js, GraphQL, REST APIs, WebSockets, Yjs
+
+\noindent\textbf{Databases:} MongoDB, PostgreSQL, MySQL, Redis
+
+\noindent\textbf{Infrastructure:} AWS, Docker, CI/CD, Linux, Git, Vercel, DigitalOcean
+
+\noindent\textbf{Other:} Unity, Swift/SwiftUI, CoreML, visionOS
+
+\end{document}

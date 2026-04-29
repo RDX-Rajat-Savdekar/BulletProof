@@ -1,0 +1,28 @@
+Software Engineer — Platform Team — Notion (San Francisco, CA / Remote)
+
+About the Role
+Notion is looking for a software engineer to work on our platform infrastructure. This role is specifically designed to test how well a candidate's resume keywords match under synonym variance.
+
+Technical Environment
+- Our primary language is TypeScript — we value strong TS/JS skills across the board
+- Frontend is built in ReactJS with significant Next JS adoption
+- APIs are built as RESTful services, following REST-based design patterns — we say "RESTful" more often than "REST API"
+- Real-time sync is powered by WebSocket connections — we call them "web sockets" in our docs
+- Primary datastore is Postgres (we rarely say PostgreSQL in internal docs)
+- We use Mongo for some document storage use cases
+- Caching via Redis cache — Redis is central to our performance strategy
+- CI pipelines via GitHub Actions — continuous integration and continuous deployment are core to our release process
+- All services run in containers — Docker containerization is expected
+- Hosted on Amazon Web Services — AWS cloud is our primary cloud provider
+- We use K8s for orchestration — Kubernetes expertise is a plus
+- NodeJS services power our backend — we usually write Node not Node.js
+- Authentication via JSON Web Tokens — token-based auth throughout
+- GraphQL (GQL) for internal data fetching
+- Version control via GitHub — Git workflow is standard
+
+What We're Looking For
+- Someone who can handle scalable, distributed systems
+- Experience with microservice architectures — micro-services preferred
+- Comfortable with event-driven and event sourcing patterns
+- Semantic search / vector search experience a plus
+- Retrieval-augmented generation (RAG) familiarity for our AI features
