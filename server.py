@@ -126,6 +126,8 @@ class CompileRequest(BaseModel):
     grade: str = ""
     coverage_pct: int = 0
     active_projects: list[str] = []
+    company: str = ""
+    role_title: str = ""
 
 class SaveIdeaRequest(BaseModel):
     idea: dict
@@ -246,16 +248,22 @@ def _make_version_id() -> str:
     return f"R{stamp}-{suffix}"
 
 def _log_version(version_id: str, req: CompileRequest):
+    now = datetime.now(timezone.utc)
     history = json.loads(_HISTORY_PATH.read_text())
     history.append({
         "id": version_id,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "jd_snippet": req.jd_snippet[:200],
+        "timestamp": now.isoformat(),
+        "date_local": now.strftime("%Y-%m-%d"),
+        "time_local": now.strftime("%H:%M UTC"),
+        "company": req.company,
+        "role_title": req.role_title,
         "grade": req.grade,
         "coverage_pct": req.coverage_pct,
-        "selected_bullet_ids": req.selected_bullet_ids,
+        "format": req.format,
+        "jd_snippet": req.jd_snippet[:200],
         "active_projects": req.active_projects,
         "project_order": req.project_order,
+        "selected_bullet_ids": req.selected_bullet_ids,
         "suggested_project": req.suggested_project,
     })
     _HISTORY_PATH.write_text(json.dumps(history, indent=2))
@@ -495,9 +503,15 @@ def save_idea(req: SaveIdeaRequest):
 @app.put("/api/project-ideas/status")
 def update_idea_status(req: UpdateIdeaStatusRequest):
     ideas = json.loads(_IDEAS_PATH.read_text())
+    now = datetime.now(timezone.utc).isoformat()
     for idea in ideas:
         if idea.get("id") == req.idea_id or idea.get("name") == req.idea_id:
+            prev = idea.get("status", "idea")
             idea["status"] = req.status
+            idea["status_updated_at"] = now
+            idea.setdefault("status_history", []).append({
+                "from": prev, "to": req.status, "at": now,
+            })
     _IDEAS_PATH.write_text(json.dumps(ideas, indent=2))
     return {"status": "updated"}
 

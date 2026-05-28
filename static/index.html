@@ -272,6 +272,16 @@
       </div>
       <hr class="divider">
       <div id="score-breakdown" style="font-size:12px;color:var(--muted);"></div>
+      <div style="margin-bottom:10px;">
+        <div class="form-group" style="margin-bottom:6px;">
+          <label class="form-label">Company (for log)</label>
+          <input class="form-input" id="export-company" placeholder="Google, Stripe…" style="font-size:12px;padding:5px 8px;">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">Role title (for log)</label>
+          <input class="form-input" id="export-role" placeholder="Software Engineer" style="font-size:12px;padding:5px 8px;">
+        </div>
+      </div>
       <div class="export-btns">
         <button class="btn btn-ghost" onclick="exportLatex()">⬇ Download .tex</button>
         <button class="btn btn-primary" onclick="exportPDF()">⬇ Download PDF</button>
@@ -1138,6 +1148,8 @@ function _buildCompilePayload(format) {
     grade: analysisResult?.grade || '',
     coverage_pct: analysisResult?.coverage_pct || 0,
     active_projects: [...activeProjects],
+    company: document.getElementById('export-company')?.value?.trim() || '',
+    role_title: document.getElementById('export-role')?.value?.trim() || '',
   };
 }
 
@@ -1193,18 +1205,27 @@ async function openHistory() {
   }
 
   const rows = [...history].reverse().map(h => {
-    const dt = new Date(h.timestamp).toLocaleString();
+    const dt = h.date_local
+      ? `${h.date_local} ${h.time_local}`
+      : new Date(h.timestamp).toLocaleString();
+    const fmtBadge = h.format === 'pdf'
+      ? `<span style="font-size:10px;padding:1px 6px;border-radius:10px;background:rgba(52,211,153,.15);color:var(--green);border:1px solid rgba(52,211,153,.3);">PDF</span>`
+      : `<span style="font-size:10px;padding:1px 6px;border-radius:10px;background:rgba(108,138,255,.12);color:var(--accent);border:1px solid rgba(108,138,255,.2);">.tex</span>`;
+    const target = [h.role_title, h.company].filter(Boolean).join(' @ ');
     return `<div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:10px 12px;margin-bottom:8px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
         <code style="font-size:11px;color:var(--accent);">${escHtml(h.id)}</code>
         <span style="font-size:11px;color:var(--muted);">${escHtml(dt)}</span>
       </div>
+      ${target ? `<div style="font-size:13px;font-weight:600;margin-top:4px;">${escHtml(target)}</div>` : ''}
       <div style="font-size:12px;margin-top:4px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-        ${h.grade ? `<span style="color:var(--green);font-weight:700">${escHtml(h.grade)}</span>` : ''}
+        ${fmtBadge}
+        ${h.grade ? `<span style="color:var(--green);font-weight:700;">${escHtml(h.grade)}</span>` : ''}
         ${h.coverage_pct ? `<span style="color:var(--muted);">${h.coverage_pct}% coverage</span>` : ''}
-        ${h.jd_snippet ? `<span style="color:var(--muted);font-style:italic;">"${escHtml(h.jd_snippet.slice(0,60))}…"</span>` : ''}
+        ${h.active_projects?.length ? `<span style="color:var(--muted);">${h.active_projects.length} projects</span>` : ''}
       </div>
-      <div style="margin-top:6px;">
+      ${h.jd_snippet ? `<div style="font-size:11px;color:var(--muted);margin-top:4px;font-style:italic;">"${escHtml(h.jd_snippet.slice(0,80))}…"</div>` : ''}
+      <div style="margin-top:8px;">
         <button class="btn btn-ghost btn-sm" onclick="loadVersion('${escHtml(h.id)}')">Load into Builder</button>
       </div>
     </div>`;
@@ -1255,7 +1276,8 @@ function renderIdeas(ideas) {
     const kwTags = (idea.keywords_covered||[]).map(k => `<span class="kw-tag kw-bullet" style="font-size:10px">${escHtml(k)}</span>`).join('');
     const status = idea.status || 'idea';
     const statusCls = status === 'built' ? 'status-built' : status === 'building' ? 'status-building' : 'status-idea';
-    const dt = idea.saved_at ? new Date(idea.saved_at).toLocaleDateString() : '';
+    const savedDt  = idea.saved_at       ? new Date(idea.saved_at).toLocaleDateString()       : '';
+    const updatedDt = idea.status_updated_at ? new Date(idea.status_updated_at).toLocaleDateString() : '';
     return `<div class="idea-card">
       <div class="idea-name">${escHtml(idea.name||'')}</div>
       <div class="idea-tagline">${escHtml(idea.tagline||'')}</div>
@@ -1264,7 +1286,11 @@ function renderIdeas(ideas) {
       ${kwTags ? `<div class="bullet-meta" style="margin-bottom:8px;">${kwTags}</div>` : ''}
       <div class="idea-meta">
         <span class="status-badge ${statusCls}">${status}</span>
-        <span>${escHtml(dt)}${idea.build_time ? ` · ~${escHtml(idea.build_time)}` : ''}</span>
+        <span style="text-align:right;">
+          ${savedDt ? `Saved ${escHtml(savedDt)}` : ''}
+          ${idea.build_time ? ` · ~${escHtml(idea.build_time)}` : ''}
+          ${updatedDt && updatedDt !== savedDt ? `<br><span style="color:var(--accent2);">Updated ${escHtml(updatedDt)}</span>` : ''}
+        </span>
       </div>
       <div class="idea-actions">
         ${status !== 'building' ? `<button class="btn btn-ghost btn-sm" onclick="setIdeaStatus('${escHtml(idea.name)}', 'building')">Mark Building</button>` : ''}
